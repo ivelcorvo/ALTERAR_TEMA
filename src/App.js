@@ -1,24 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
 
+import { BrowserRouter,Routes,Route } from "react-router-dom";
+
+// ### COMPONENTS ###
+  import NavBar from "./components/NavBar";
+
+// ### PAGES ###
+  import Home from "./pages/Home";
+  import About from "./pages/About";
+
+// ### HOOKS ###
+  import { useTemaContext } from "./hooks/useTemaContext";
+
+// ### OBS: PROVIDER ESTÉ EM index.js ###
 function App() {
+
+  const {tema} = useTemaContext();
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      
+    <div className={`h-screen p-0 m-0 ${(tema==="claro")?"bg-gray-100 text-gray-900":"bg-gray-900 text-white"}`}>
+      <BrowserRouter>
+        <NavBar></NavBar>
+        <Routes>
+          <Route path="/home"  element={<Home/>}></Route>
+          <Route path="/about" element={<About/>}></Route>
+        </Routes>
+      </BrowserRouter>        
     </div>
+  
   );
 }
 
