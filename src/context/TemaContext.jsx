@@ -13,7 +13,7 @@ import { useState, createContext } from "react";
 export const TemaContext = createContext();
 
 export const TemaProvider = ({children})=>{
-    const [tema,setTema] = useState("claro");
+    const [tema,setTema] = useState(true);
 
     return(
         <TemaContext.Provider value={{tema,setTema}}>

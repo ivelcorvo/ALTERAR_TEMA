@@ -1,5 +1,5 @@
 
-import { BrowserRouter,Routes,Route } from "react-router-dom";
+import { BrowserRouter,Routes,Route,Navigate } from "react-router-dom";
 
 // ### COMPONENTS ###
   import NavBar from "./components/NavBar";
@@ -18,13 +18,16 @@ function App() {
 
   return (
       
-    <div className={`h-screen p-0 m-0 ${(tema==="claro")?"bg-gray-100 text-gray-900":"bg-gray-900 text-white"}`}>
+    <div className={`min-h-screen p-0 m-0 ${(tema)?"bg-gray-100 text-gray-900":"bg-gray-900 text-white"}`}>
       <BrowserRouter>
         <NavBar></NavBar>
-        <Routes>
-          <Route path="/home"  element={<Home/>}></Route>
-          <Route path="/about" element={<About/>}></Route>
-        </Routes>
+        <div className="flex-grow p-3">
+          <Routes>
+            <Route path="/"  element={<Home/>}></Route>
+            <Route path="/about" element={<About/>}></Route>
+            <Route path="*"      element={<Navigate to="/" />}></Route>
+          </Routes>
+        </div>
       </BrowserRouter>        
     </div>
   
