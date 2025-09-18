@@ -1,4 +1,4 @@
-import React, { useState, createContext, useEffect } from "react";
+import React, { useState, createContext, useEffect, ReactNode, useMemo } from "react";
 
 // ### CRIAR CONTEXT ###
 // children é uma prop especial do React.
@@ -9,27 +9,42 @@ import React, { useState, createContext, useEffect } from "react";
 // tudo que estiver dentrode  <TemaProvider> aqui dentro </TemaProvider> vai poder receber: tema,setTema por isso o ideao é que ele fique em index.js a não ser qu eseja algo expecifico
 
 interface IAppContext {
-    tema: boolean,
-    toggleTema: ()=>void;
-    // setTema: React.Dispatch<React.SetStateAction<boolean>>
+  tema: boolean,
+  toggleTema: () => void;
+  // setTema: React.Dispatch<React.SetStateAction<boolean>>
 }
 export const TemaContext = createContext<IAppContext | undefined>(undefined);
 
-export const TemaProvider: React.FC<React.PropsWithChildren> = ({children})=>{
-    const [tema,setTema] = useState<boolean>(()=>{
-        const saved = localStorage.getItem("tema");
-        return saved ?JSON.parse(saved) :false;
-    });
+interface TemaProviderProps {
+  children: ReactNode,
+}
 
-    useEffect(()=>{
-        localStorage.setItem("tema",JSON.stringify(tema));
-    },[tema]);
+// export const TemaProvider: React.FC<React.PropsWithChildren> = ({children})=>{
+export const TemaProvider = ({ children }: TemaProviderProps) => {
 
-    const toggleTema = ()=>setTema(prev=>!prev);
+  // melhor forma em typescript
+  // interface Props {
+  //   children: ReactNode;
+  // }
+  // const MeuComponenteProvider = ({ children }: Props) => { ... }
 
-    return(
-        <TemaContext.Provider value={{tema,toggleTema}}>
-            {children}
-        </TemaContext.Provider>
-    );
+  const [tema, setTema] = useState<boolean>(() => {
+    const saved = localStorage.getItem("tema");
+    return saved ? JSON.parse(saved) : false;
+  });
+
+  useEffect(() => {
+    localStorage.setItem("tema", JSON.stringify(tema));
+  }, [tema]);
+
+  const toggleTema = () => setTema(prev => !prev);
+
+  // useMemo evita que o objeto value seja recriado toda vez que o componente renderiza
+  const value = useMemo(()=>({tema,toggleTema}),[tema]);
+
+  return (
+    <TemaContext.Provider value={value}>
+      {children}
+    </TemaContext.Provider>
+  );
 };
